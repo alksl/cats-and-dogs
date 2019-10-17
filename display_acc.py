@@ -16,13 +16,17 @@ val_loss = history['val_loss']
 
 epochs = range(1, len(acc) + 1)
 
+fig = plt.figure()
+fig.suptitle(args.file)
+plt.subplot(2, 1, 1)
+
 plt.plot(epochs, acc, 'bo', label='Training acc')
 plt.plot(epochs, val_acc, 'b', label='Validation acc')
 plt.title('Training and Validation accuracy')
 plt.legend()
 
-plt.figure()
 
+plt.subplot(2, 1, 2)
 plt.plot(epochs, loss, 'bo', label='Training loss')
 plt.plot(epochs, val_loss, 'b', label='Validation loss')
 plt.title('Training and Validation loss')
