@@ -6,6 +6,7 @@ import json
 
 parser = ArgumentParser(prog='train.py')
 parser.add_argument('--augment', type=bool, default=False, required=False)
+parser.add_argument('model', type=str, choices=models.keys())
 args = parser.parse_args()
 print("Arguments: ", args)
 
@@ -45,7 +46,7 @@ validation_generator = validation_datagen.flow_from_directory(
     class_mode='binary',
 )
 
-model = models['small_1']
+model = models[args.model]
 training_run = model.fit_generator(
     train_generator,
     steps_per_epoch=100,
