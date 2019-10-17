@@ -1,4 +1,4 @@
-from model import model
+from model import models
 from keras.preprocessing.image import ImageDataGenerator
 from pathlib import Path
 import json
@@ -23,6 +23,7 @@ validation_generator = validation_datagen.flow_from_directory(
     class_mode='binary',
 )
 
+model = models['small_1']
 training_run = model.fit_generator(
     train_generator,
     steps_per_epoch=100,
@@ -31,7 +32,9 @@ training_run = model.fit_generator(
     validation_steps=50,
 )
 
-model.save('models/cats_and_dogs_small_1.h5')
-with open('models/cats_and_dogs_small_1_history.json', mode='w') as f:
+model_file = 'models/cats_and_dogs_{0}.h5'.format(model.name)
+history_file = "models/cats_and_dogs_{0}_history.json".format(model.name)
+model.save(model_file)
+with open(history_file, mode='w') as f:
     json.dump(training_run.history, f)
 
