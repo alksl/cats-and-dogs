@@ -1,9 +1,31 @@
-from models import models
+from argparse import ArgumentParser
 from keras.preprocessing.image import ImageDataGenerator
+from models import models
 from pathlib import Path
 import json
 
-train_datagen = ImageDataGenerator(rescale=1./255)
+parser = ArgumentParser(prog='train.py')
+parser.add_argument('--augment', type=bool, default=False, required=False)
+args = parser.parse_args()
+print("Arguments: ", args)
+
+if args.augment:
+    augment_partial = '_augmented'
+    augmentation_args = {
+        'rescale': 1./255,
+        'rotation_range': 40,
+        'width_shift_range': 0.2,
+        'height_shift_range': 0.2,
+        'shear_range': 0.2,
+        'zoom_range': 0.2,
+        'horizontal_flip': True,
+    }
+else:
+    augment_partial = ''
+    augmentation_args = {'rescale': 1./255}
+
+
+train_datagen = ImageDataGenerator(**augmentation_args)
 validation_datagen = ImageDataGenerator(rescale=1./255)
 
 train_dir = Path("./subset/train")
@@ -32,8 +54,14 @@ training_run = model.fit_generator(
     validation_steps=50,
 )
 
-model_file = 'models/cats_and_dogs_{0}.h5'.format(model.name)
-history_file = "models/cats_and_dogs_{0}_history.json".format(model.name)
+model_file = 'models/cats_and_dogs_{0}{1}.h5'.format(
+    model.name,
+    augment_partial,
+)
+history_file = "models/cats_and_dogs_{0}{1}_history.json".format(
+    model.name,
+    augment_partial,
+)
 model.save(model_file)
 with open(history_file, mode='w') as f:
     json.dump(training_run.history, f)

@@ -1,7 +1,12 @@
 import json
 import matplotlib.pyplot as plt
+from argparse import ArgumentParser
 
-with open('models/cats_and_dogs_small_1_history.json', mode='r') as f:
+parser = ArgumentParser(prog='display_acc.py')
+parser.add_argument("file", type=str)
+args = parser.parse_args()
+
+with open(args.file, mode='r') as f:
     history = json.load(f)
 
 acc = history['acc']
