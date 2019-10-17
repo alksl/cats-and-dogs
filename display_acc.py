@@ -1,7 +1,7 @@
 import json
 import matplotlib.pyplot as plt
 
-with open('model/cats_and_dogs_small_1_history.json', mode='r') as f:
+with open('models/cats_and_dogs_small_1_history.json', mode='r') as f:
     history = json.load(f)
 
 acc = history['acc']

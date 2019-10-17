@@ -1,4 +1,4 @@
-from model import models
+from models import models
 from keras.preprocessing.image import ImageDataGenerator
 from pathlib import Path
 import json
