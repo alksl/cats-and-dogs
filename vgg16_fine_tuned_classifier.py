@@ -75,7 +75,7 @@ model.compile(
 
 training_run = model.fit_generator(
     train_generator,
-    steps_per_epoch=1,
+    steps_per_epoch=100,
     epochs=args.epochs,
     validation_data=validation_generator,
     validation_steps=50,
