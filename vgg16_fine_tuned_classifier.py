@@ -1,12 +1,10 @@
 import os
 import numpy as np
 import json
+import tensorflow as tf
 from argparse import ArgumentParser
 from keras.preprocessing.image import ImageDataGenerator
-from keras.applications import VGG16
-from keras import models
-from keras import layers
-from keras import optimizers
+from tensorflow.keras.applications import VGG16
 from pathlib import Path
 
 def parse_args():
@@ -27,11 +25,11 @@ def parse_args():
 
 def build_model():
     conv_base = VGG16(weights='imagenet', include_top=False, input_shape=(150, 150, 3))
-    model = models.Sequential()
+    model = tf.keras.models.Sequential()
     model.add(conv_base)
-    model.add(layers.Flatten())
-    model.add(layers.Dense(256, activation='relu'))
-    model.add(layers.Dense(1, activation='sigmoid'))
+    model.add(tf.keras.layers.Flatten())
+    model.add(tf.keras.layers.Dense(256, activation='relu'))
+    model.add(tf.keras.layers.Dense(1, activation='sigmoid'))
 
     for layer in conv_base.layers:
         if layer.name.startswith('block5'):
@@ -70,7 +68,7 @@ validation_generator = validation_datagen.flow_from_directory(
 
 model = build_model()
 model.compile(
-    optimizer=optimizers.RMSprop(lr=1e-5),
+    optimizer=tf.keras.optimizers.RMSprop(lr=1e-5),
     loss='binary_crossentropy',
     metrics=['acc'],
 )
@@ -83,4 +81,4 @@ training_run = model.fit_generator(
     validation_steps=50,
 )
 
-model.save(args.model_dir, save_format='tf')
+tf.contrib.saved_model.save_keras_model(model, args.model_dir)
