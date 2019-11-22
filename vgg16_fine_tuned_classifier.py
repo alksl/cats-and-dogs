@@ -83,10 +83,4 @@ training_run = model.fit_generator(
     validation_steps=50,
 )
 
-model_dir = Path(args.model_dir)
-model_file = 'vgg16_fine_tuned_augmented.h5'
-history_file = "vgg16_fine_tuned_augmented_history.json"
-
-model.save(str(model_dir.joinpath(model_file)))
-with open(model_dir.joinpath(history_file), mode='w') as f:
-    json.dump(training_run.history, f)
+model.save(args.model_dir, save_format='tf')
